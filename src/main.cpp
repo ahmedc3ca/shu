@@ -35,7 +35,8 @@ int main()
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
-    //setRandomColor();
+    
+    setRandomColor();
     // render loop
     while (!glfwWindowShouldClose(window))
     {
@@ -43,7 +44,6 @@ int main()
         processInput(window);
 
         // rendering commands
-        //glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         // check and call events and swap the buffers

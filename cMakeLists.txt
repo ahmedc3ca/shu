@@ -1,0 +1,42 @@
+cmake_minimum_required(VERSION 3.10)
+
+# Project name
+project(ShuEngine)
+
+# Set C++ standard
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+# Define the output directories
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build)
+
+# Define build type if not set
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Debug)
+endif()
+
+# Set output directories for different build configurations
+foreach(OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES})
+    string(TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG_UC)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG_UC} ${CMAKE_SOURCE_DIR}/bin)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG_UC} ${CMAKE_SOURCE_DIR}/bin)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG_UC} ${CMAKE_SOURCE_DIR}/build)
+endforeach()
+
+# Automatically gather all source files in the src folder
+file(GLOB_RECURSE SOURCE_FILES "${CMAKE_SOURCE_DIR}/src/*.cpp" "${CMAKE_SOURCE_DIR}/src/*.h" "${CMAKE_SOURCE_DIR}/src/*.c")
+
+# Include directories
+include_directories(${CMAKE_SOURCE_DIR}/include)
+include_directories(${CMAKE_SOURCE_DIR}/include/glfw-3.4/include)
+
+# Library directories
+link_directories(${CMAKE_SOURCE_DIR}/include/glfw-3.4/lib-vc2022)
+
+# Create the executable
+add_executable(ShuEngine ${SOURCE_FILES})
+
+# Link necessary libraries (e.g., OpenGL, GLFW, GLEW, etc.)
+target_link_libraries(ShuEngine glfw3.lib opengl32.lib user32.lib gdi32.lib shell32.lib)
