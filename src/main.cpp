@@ -57,7 +57,7 @@ int main()
     }
 
     Shader ourShader("../shaders/inter.vs", "../shaders/inter.fs");
-
+    
 
 
     float vertices[] = {
@@ -103,6 +103,7 @@ int main()
         float timeValue = glfwGetTime();
         float greenValue = sin(timeValue) / 2.0f + 0.5f;
         ourShader.setFloat("greenColor", greenValue);
+        ourShader.setFloat("rightOffset", 0.5f);
         ourShader.use();
 
         glBindVertexArray(VAO);
