@@ -31,6 +31,7 @@ file(GLOB_RECURSE SOURCE_FILES "${CMAKE_SOURCE_DIR}/src/*.cpp" "${CMAKE_SOURCE_D
 # Include directories
 include_directories(${CMAKE_SOURCE_DIR}/include)
 include_directories(${CMAKE_SOURCE_DIR}/include/glfw-3.4/include)
+include_directories(${CMAKE_SOURCE_DIR}/include/stb)
 
 # Library directories
 link_directories(${CMAKE_SOURCE_DIR}/include/glfw-3.4/lib-vc2022)
