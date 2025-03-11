@@ -19,7 +19,7 @@ export class FpsCounter {
             if (currentTime - previousTime >= 1.0)
             {
                 // Display the frame count here any way you want.
-                std::cout << frameCount << std::endl;
+                std::cout << "FPS: " << frameCount << std::endl;
 
                 frameCount = 0;
                 previousTime = currentTime;

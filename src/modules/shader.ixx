@@ -4,6 +4,12 @@ export module shader;
 #include <glad/glad.h> // include glad to get all the required OpenGL headers
 #include <GLFW/glfw3.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+
+
 import <string>;
 import <fstream>;
 import <sstream>;
@@ -115,6 +121,12 @@ public:
     void setFloat(const std::string& name, float value) const
     {
         glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+    }
+
+    // zebi manga bayez 3ashan el componets
+    void setMat4(const std::string& name, const glm::mat4& mat) const
+    {
+        glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
     }
 };
 
