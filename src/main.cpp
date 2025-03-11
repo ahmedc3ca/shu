@@ -8,6 +8,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 import shader;
+import fps;
 
 
 
@@ -167,7 +168,9 @@ int main()
     setRandomColor();
 
 
-    
+    // initialize fps counter
+    auto fpsCounter = FpsCounter();
+
     // render loop
     while (!glfwWindowShouldClose(window))
     {
@@ -200,7 +203,7 @@ int main()
         glfwSwapBuffers(window);
         glfwPollEvents();
 
-
+        fpsCounter.Update();
     }
 
     glDeleteVertexArrays(1, &VAO);
