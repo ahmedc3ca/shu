@@ -4,27 +4,41 @@ export module fps;
 import <iostream>;
 
 export class FpsCounter {
-	double previousTime = glfwGetTime();
-	int frameCount = 0;
     public:
 
         FpsCounter() {
             glfwSwapInterval(0);
         }
-	    void Update() {
+	    void update() {
             // Measure speed
             double currentTime = glfwGetTime();
-            frameCount++;
+
+            // Update Delta Time
+            m_deltaTime = currentTime - m_lastFrame;
+            m_lastFrame = currentTime;
+
+            m_frameCount++;
             // If a second has passed.
-            if (currentTime - previousTime >= 1.0)
+            if (currentTime - m_previousTime >= 1.0)
             {
                 // Display the frame count here any way you want.
-                std::cout << "FPS: " << frameCount << std::endl;
+                std::cout << "FPS: " << m_frameCount << std::endl;
 
-                frameCount = 0;
-                previousTime = currentTime;
+                m_frameCount = 0;
+                m_previousTime = currentTime;
             }
 	    }
+
+        float getDeltaTime() const { 
+            return m_deltaTime;
+        }
+
+    private:
+        double m_previousTime = glfwGetTime();
+        int m_frameCount = 0;
+
+        float m_deltaTime = 0.0f;	// Time between current frame and last frame
+        float m_lastFrame = 0.0f; // Time of last frame
 		
 
 	

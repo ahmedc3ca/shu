@@ -20,6 +20,13 @@ void setRandomColor();
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
+// initialize fps counter
+FpsCounter fpsCounter = FpsCounter();
+
 int main()
 {
 
@@ -186,10 +193,6 @@ int main()
     ourShader.setInt("texture2", 1);
 
     // Coordinate System
-    glm::mat4 view = glm::mat4(1.0f);
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-    int viewLoc = glGetUniformLocation(ourShader.ID, "view");
-    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 
     glm::mat4 projection;
     projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
@@ -202,13 +205,12 @@ int main()
     //set background color
     setRandomColor();
 
-
-    // initialize fps counter
-    auto fpsCounter = FpsCounter();
-
     // render loop
     while (!glfwWindowShouldClose(window))
     {
+        //update fps
+        fpsCounter.update();
+
         // input
         processInput(window);
 
@@ -225,6 +227,10 @@ int main()
         ourShader.use();
 
         glBindVertexArray(VAO);
+        glm::mat4 view;
+        view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+        int viewLoc = glGetUniformLocation(ourShader.ID, "view");
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
         for (unsigned int i = 0; i < 10; i++)
         {
             glm::mat4 model = glm::mat4(1.0f);
@@ -242,8 +248,6 @@ int main()
         // check and call events and swap the buffers
         glfwSwapBuffers(window);
         glfwPollEvents();
-
-        fpsCounter.Update();
     }
 
     glDeleteVertexArrays(1, &VAO);
@@ -269,6 +273,16 @@ void processInput(GLFWwindow* window)
     {
 		setRandomColor();
     }
+
+    const float cameraSpeed = 2.5f * fpsCounter.getDeltaTime();
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        cameraPos += cameraSpeed * cameraFront;
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        cameraPos -= cameraSpeed * cameraFront;
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 
 }
 
