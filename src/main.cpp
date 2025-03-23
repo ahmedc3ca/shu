@@ -15,6 +15,8 @@ import fps;
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 void setRandomColor();
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+
 
 // settings
 const unsigned int SCR_WIDTH = 800;
@@ -23,6 +25,10 @@ const unsigned int SCR_HEIGHT = 600;
 glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
+float lastX = 400, lastY = 300;
+float yaw = -90;
+float pitch = 0;
 
 // initialize fps counter
 FpsCounter fpsCounter = FpsCounter();
@@ -35,6 +41,7 @@ int main()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
 
     // glfw window creation
     GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "SHU", NULL, NULL);
@@ -58,6 +65,8 @@ int main()
     
 
     glEnable(GL_DEPTH_TEST);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
 
 
     float vertices[] = {
@@ -213,6 +222,8 @@ int main()
 
         // input
         processInput(window);
+        glfwSetCursorPosCallback(window, mouse_callback);
+
 
         // rendering commands
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -285,6 +296,32 @@ void processInput(GLFWwindow* window)
         cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 
 }
+
+void mouse_callback(GLFWwindow* window, double xpos, double ypos) 
+{
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos; // reversed since y-coordinates range from bottom to top
+    lastX = xpos;
+    lastY = ypos;
+
+    const float sensitivity = 0.1f;
+    xoffset *= sensitivity;
+    yoffset *= sensitivity;
+
+    yaw += xoffset;
+    pitch += yoffset;
+    if (pitch > 89.0f)
+        pitch = 89.0f;
+    if (pitch < -89.0f)
+        pitch = -89.0f;
+
+    glm::vec3 direction;
+    direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    direction.y = sin(glm::radians(pitch));
+    direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    cameraFront = glm::normalize(direction);
+}
+
 
 void setRandomColor() {
     float r = (float)rand() / RAND_MAX;
