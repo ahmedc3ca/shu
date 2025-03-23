@@ -1,4 +1,4 @@
-export module shader;
+#pragma once
 
 
 #include <glad/glad.h> // include glad to get all the required OpenGL headers
@@ -10,14 +10,14 @@ export module shader;
 
 
 
-import <string>;
-import <fstream>;
-import <sstream>;
-import <iostream>;
+#include  <string>;
+#include  <fstream>;
+#include  <sstream>;
+#include  <iostream>;
 
 
 
-export class Shader
+class Shader
 {
 public:
     // the program ID
