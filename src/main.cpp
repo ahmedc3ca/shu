@@ -16,7 +16,6 @@ import fps;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
-void setRandomColor();
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
@@ -219,7 +218,7 @@ int main()
 
 
     //set background color
-    setRandomColor();
+    glClearColor(0.1f, 0.7f, 0.7f, 1.0f);
 
     // render loop
     while (!glfwWindowShouldClose(window))
@@ -256,8 +255,6 @@ int main()
         {
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, cubePositions[i]);
-            float angle = 20.0f * i;
-            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
             int modelLoc = glGetUniformLocation(ourShader.ID, "model");
             glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
@@ -290,11 +287,6 @@ void processInput(GLFWwindow* window)
         glfwSetWindowShouldClose(window, true);
     }
 
-    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-    {
-		setRandomColor();
-    }
-
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         camera.ProcessKeyboard(FORWARD, fpsCounter.getDeltaTime());
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -303,6 +295,10 @@ void processInput(GLFWwindow* window)
         camera.ProcessKeyboard(LEFT, fpsCounter.getDeltaTime());
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.ProcessKeyboard(RIGHT, fpsCounter.getDeltaTime());
+    if(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+		camera.ProcessKeyboard(UP, fpsCounter.getDeltaTime());
+    if(glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+		camera.ProcessKeyboard(DOWN, fpsCounter.getDeltaTime());
 }
 
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
@@ -329,12 +325,4 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     camera.ProcessMouseScroll(static_cast<float>(yoffset));
-}
-
-
-void setRandomColor() {
-    float r = (float)rand() / RAND_MAX;
-    float g = (float)rand() / RAND_MAX;
-    float b = (float)rand() / RAND_MAX;
-    glClearColor(r, g, b, 1.0f);
 }
